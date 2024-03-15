@@ -1,0 +1,145 @@
+Microsoft (R) Macro Assembler Version 14.37.32824.0	    11/03/23 20:59:04
+P6_1_Hassler.asm					     Page 1 - 1
+
+
+				; Author:                 Harrison Hassler
+				; Assignment Title:       P6_1 Product of Positives
+				; Assignment Description: Write an entire assembly language
+				;                         program that will prompt the user
+				;                         to enter a series of ten 16-bit values,
+				;                         calculating the product of all positive,
+				;                         non-zero values. Display the product of
+				;                         ten numbers and the number of zeros entered.
+				; Due Date:               11/7/2023
+				; Date Created:           11/1/2023
+				; Date Last Modified:     11/3/2023
+
+				.586
+				.MODEL FLAT
+
+				INCLUDE io.h            
+			      C ; IO.H -- header file for I/O macros (listing suppressed)
+			      C .NOLIST      ; turn off listing
+			      C .LIST        ; begin listing
+			      C 
+
+				.STACK 4096
+
+ 00000000			.DATA
+ 00000000 45 6E 74 65 72	prompt1     BYTE    "Enter a number", 0
+	   20 61 20 6E 75
+	   6D 62 65 72 00
+ 0000000F  00000014 [		string      BYTE    20 DUP (?)
+	    00
+	   ]
+ 00000023  00000014 [		labelBuffer BYTE    20 DUP (?)
+	    00
+	   ]
+ 00000037 50 72 6F 64 75	label1      BYTE    "Product of 10 numbers is "
+	   63 74 20 6F 66
+	   20 31 30 20 6E
+	   75 6D 62 65 72
+	   73 20 69 73 20
+ 00000050  0000000B [		product     BYTE    11 DUP (?), 0dh, 0ah
+	    00
+	   ] 0D 0A
+ 0000005D 4E 75 6D 62 65	label2      BYTE    "Number of zeros is "
+	   72 20 6F 66 20
+	   7A 65 72 6F 73
+	   20 69 73 20
+ 00000070  00000006 [		zeroes      BYTE    6 DUP (?), 0
+	    00
+	   ] 00
+
+ 00000000			.CODE
+ 00000000			_MainProc PROC 
+ 00000000  BB 00000001		                   mov      ebx, 1              ; copy 1 to ebx
+ 00000005  66| BA 0000		                   mov      dx, 0               ; copy 0 to dx
+ 00000009  66| B9 000A		                   mov      cx, 10              ; loop 10 times
+
+ 0000000D			forIndex:                 
+				                   input    prompt1, string, 20 ; read ASCII characters     
+				                   atow     string              ; convert to integer                 
+ 0000003A  66| 83 F8 00		                   cmp      ax, 0               ; compare number entered to 0
+ 0000003E  75 04		                   jnz      multiply            ; if it is not 0 jump to multiply
+ 00000040  66| 42		                   inc      dx                  ; increment zero count 
+ 00000042  EB C9		                   jmp      forIndex            ; jmp to forIndex
+
+ 00000044			multiply:                
+ 00000044  0F B7 C0		                   movzx    eax, ax             ; move to bigger register
+ 00000047  0F AF D8		                   imul     ebx, eax            ; multiply product
+ 0000004A  E2 C1		                   loop     forIndex            ; jump to forIndex
+
+				                   dtoa     product, ebx        ; convert to ASCII characters                         
+				                   wtoa     zeroes, dx          ; convert to ASCII characters
+				                   output   labelBuffer, label1 ; output label and answers
+ 00000096  2B C0		                   sub      eax, eax            ; clear eax
+ 00000098  C3			 ret                                            ; exit with return code 0
+ 00000099			_MainProc ENDP
+				END                                             ; end of source code
+Microsoft (R) Macro Assembler Version 14.37.32824.0	    11/03/23 20:59:04
+P6_1_Hassler.asm					     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+atod . . . . . . . . . . . . . .	Proc
+atow . . . . . . . . . . . . . .	Proc
+dtoa . . . . . . . . . . . . . .	Proc
+input  . . . . . . . . . . . . .	Proc
+output . . . . . . . . . . . . .	Proc
+wtoa . . . . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000077 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000099 Para	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+_MainProc  . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000099 Public
+  forIndex . . . . . . . . . . .	L Near	 0000000D _TEXT	
+  multiply . . . . . . . . . . .	L Near	 00000044 _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000000h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+_getInput  . . . . . . . . . . .	L Near	 00000000 FLAT	External
+_showOutput  . . . . . . . . . .	L Near	 00000000 FLAT	External
+atodproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+atowproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+dtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+label1 . . . . . . . . . . . . .	Byte	 00000037 _DATA	
+label2 . . . . . . . . . . . . .	Byte	 0000005D _DATA	
+labelBuffer  . . . . . . . . . .	Byte	 00000023 _DATA	
+product  . . . . . . . . . . . .	Byte	 00000050 _DATA	
+prompt1  . . . . . . . . . . . .	Byte	 00000000 _DATA	
+string . . . . . . . . . . . . .	Byte	 0000000F _DATA	
+wtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+zeroes . . . . . . . . . . . . .	Byte	 00000070 _DATA	
+
+	   0 Warnings
+	   0 Errors
