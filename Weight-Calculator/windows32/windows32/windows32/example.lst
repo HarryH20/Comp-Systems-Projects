@@ -1,0 +1,240 @@
+Microsoft (R) Macro Assembler Version 14.37.32824.0	    10/22/23 22:39:44
+example.asm						     Page 1 - 1
+
+
+				; Author:                  Harrison Hassler
+				; Assignment Title:        P5_1 Weighted Average
+				; Assignment Description:  Develop a solution
+				;                          that will prompt the
+				;                          user for four scores,
+				;                          and four weights for each
+				;                          of the scores. Calculate
+				;                          the weighted sum, the sum
+				;                          of the weights, and the
+				;                          weighted average. 
+				;                          Display the weighted sum
+				;                          and average on two lines
+				;                          of a message box, each line with
+				;                          an appropriate label.
+				; Due Date:                10/22/2022
+				; Date Created:            10/22/2022
+				; Date Last Modified:      10/22/2022
+
+
+				.586
+				.MODEL FLAT
+
+				INCLUDE io.h                                  ; header file for input/output
+			      C ; IO.H -- header file for I/O macros (listing suppressed)
+			      C .NOLIST      ; turn off listing
+			      C .LIST        ; begin listing
+			      C 
+
+				.STACK 4096
+
+ 00000000			.DATA
+ 00000000 00000000		score1        DWORD   ?
+ 00000004 00000000		score2        DWORD   ?
+ 00000008 00000000		score3        DWORD   ?
+ 0000000C 00000000		score4        DWORD   ?
+ 00000010 45 6E 74 65 72	promptScore1  BYTE    "Enter first score", 0
+	   20 66 69 72 73
+	   74 20 73 63 6F
+	   72 65 00
+ 00000022 45 6E 74 65 72	promptScore2  BYTE    "Enter second score", 0
+	   20 73 65 63 6F
+	   6E 64 20 73 63
+	   6F 72 65 00
+ 00000035 45 6E 74 65 72	promptScore3  BYTE    "Enter third score", 0
+	   20 74 68 69 72
+	   64 20 73 63 6F
+	   72 65 00
+ 00000047 45 6E 74 65 72	promptScore4  BYTE    "Enter fourth score", 0
+	   20 66 6F 75 72
+	   74 68 20 73 63
+	   6F 72 65 00
+ 0000005A 45 6E 74 65 72	promptWeight1 BYTE    "Enter weight for first score", 0
+	   20 77 65 69 67
+	   68 74 20 66 6F
+	   72 20 66 69 72
+	   73 74 20 73 63
+	   6F 72 65 00
+ 00000077 45 6E 74 65 72	promptWeight2 BYTE    "Enter weight for second score", 0
+	   20 77 65 69 67
+	   68 74 20 66 6F
+	   72 20 73 65 63
+	   6F 6E 64 20 73
+	   63 6F 72 65 00
+ 00000095 45 6E 74 65 72	promptWeight3 BYTE    "Enter weight for third score", 0
+	   20 77 65 69 67
+	   68 74 20 66 6F
+	   72 20 74 68 69
+	   72 64 20 73 63
+	   6F 72 65 00
+ 000000B2 45 6E 74 65 72	promptWeight4 BYTE    "Enter weight for fourth score", 0
+	   20 77 65 69 67
+	   68 74 20 66 6F
+	   72 20 66 6F 75
+	   72 74 68 20 73
+	   63 6F 72 65 00
+ 000000D0  00000028 [		string        BYTE    40 DUP (?)
+	    00
+	   ]
+ 000000F8 52 65 73 75 6C	resultLbl     BYTE    "Result:", 0
+	   74 3A 00
+ 00000100 54 68 65 20 77	resultWSum    BYTE    "The weighted sum is:", 20h
+	   65 69 67 68 74
+	   65 64 20 73 75
+	   6D 20 69 73 3A
+	   20
+ 00000115  0000000B [		weightedSum   BYTE    11 DUP (?), 0dh
+	    00
+	   ] 0D
+ 00000121 54 68 65 20 61	resultASum    BYTE    "The average is:", 20h
+	   76 65 72 61 67
+	   65 20 69 73 3A
+	   20
+ 00000131  0000000B [		average       BYTE    11 DUP(?), 0
+	    00
+	   ] 00
+
+ 00000000			.CODE
+ 00000000			_MainProc PROC
+				        input   promptScore1, string, 40      ; prompt for first score
+				        atod    string                        ; convert to integer
+ 0000002D  A3 00000000 R	        mov     score1, eax                   ; copy to score1
+				        
+				        input   promptWeight1, string, 40     ; prompt for first weight
+				        atod    string                        ; convert to integer
+ 0000005F  8B D8		        mov     ebx, eax                      ; copy to ebx
+ 00000061  0F AF 05		        imul    eax, score1                   ; multiply first score and weight
+	   00000000 R
+ 00000068  8B C8		        mov     ecx, eax                      ; copy to ecx
+				        
+				        
+
+				        input   promptScore2, string, 40      ; prompt for second score
+				        atod    string                        ; convert to integer
+ 00000097  A3 00000004 R	        mov     score2, eax                   ; copy to score2
+
+				        input   promptWeight2, string, 40     ; prompt for second weight
+				        atod    string                        ; convert to integer
+ 000000C9  03 D8		        add     ebx, eax                      ; add to sumOfWeights
+ 000000CB  0F AF 05		        imul    eax, score2                   ; multiply second score by weight
+	   00000004 R
+ 000000D2  03 C8		        add     ecx, eax                      ; add to weightedSum
+				        
+
+				        input   promptScore3, string, 40      ; prompt for third score
+				        atod    string                        ; convert to integer
+ 00000101  A3 00000008 R	        mov     score3, eax                   ; copy to score3
+
+				        input   promptWeight3, string, 40     ; prompt for third weight
+				        atod    string                        ; convert to integer
+ 00000133  03 D8		        add     ebx, eax                      ; add to sumOfWeights
+ 00000135  0F AF 05		        imul    eax, score3                   ; multiply third score and weight
+	   00000008 R
+ 0000013C  03 C8		        add     ecx, eax                      ; add to weightedSum
+
+				        input   promptScore4, string, 40      ; prompt for fourth weight
+				        atod    string                        ; convert to string
+ 0000016B  A3 0000000C R	        mov     score4, eax                   ; copy to score4
+
+				        input   promptWeight4, string, 40     ; prompt for fourth weight
+				        atod    string                        ; convert to integer
+ 0000019D  03 D8		        add     ebx, eax                      ; add to sumOfWeights
+ 0000019F  0F AF 05		        imul    eax, score4                   ; multiply fourth score and weight
+	   0000000C R
+ 000001A6  03 C8		        add     ecx, eax                      ; add to weightedSum
+				        
+
+ 000001A8  8B C1		        mov     eax, ecx                      ; copy weightedSum to eax
+ 000001AA  2B D2		        sub     edx, edx                      ; clear edx
+ 000001AC  F7 F3		        div     ebx                           ; weightedSum/sumOfWeights
+				        
+
+				        dtoa    weightedSum, ecx              ; convert to ASCII characters
+				        dtoa    average,    eax               ; convert to ASCII characters
+				        output  resultLbl, resultWSum         ; Display the weighted sum and average
+				                                              ; on two lines of a message box
+
+ 000001F7  2B C0		        sub     eax, eax                      ; clear eax
+ 000001F9  C3			        ret                                   ; return 
+ 000001FA			_MainProc ENDP
+				END                                           ; end of source code
+
+Microsoft (R) Macro Assembler Version 14.37.32824.0	    10/22/23 22:39:44
+example.asm						     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+atod . . . . . . . . . . . . . .	Proc
+atow . . . . . . . . . . . . . .	Proc
+dtoa . . . . . . . . . . . . . .	Proc
+input  . . . . . . . . . . . . .	Proc
+output . . . . . . . . . . . . .	Proc
+wtoa . . . . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000013D Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000001FA Para	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+_MainProc  . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000001FA Public
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000000h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+_getInput  . . . . . . . . . . .	L Near	 00000000 FLAT	External
+_showOutput  . . . . . . . . . .	L Near	 00000000 FLAT	External
+atodproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+atowproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+average  . . . . . . . . . . . .	Byte	 00000131 _DATA	
+dtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+promptScore1 . . . . . . . . . .	Byte	 00000010 _DATA	
+promptScore2 . . . . . . . . . .	Byte	 00000022 _DATA	
+promptScore3 . . . . . . . . . .	Byte	 00000035 _DATA	
+promptScore4 . . . . . . . . . .	Byte	 00000047 _DATA	
+promptWeight1  . . . . . . . . .	Byte	 0000005A _DATA	
+promptWeight2  . . . . . . . . .	Byte	 00000077 _DATA	
+promptWeight3  . . . . . . . . .	Byte	 00000095 _DATA	
+promptWeight4  . . . . . . . . .	Byte	 000000B2 _DATA	
+resultASum . . . . . . . . . . .	Byte	 00000121 _DATA	
+resultLbl  . . . . . . . . . . .	Byte	 000000F8 _DATA	
+resultWSum . . . . . . . . . . .	Byte	 00000100 _DATA	
+score1 . . . . . . . . . . . . .	DWord	 00000000 _DATA	
+score2 . . . . . . . . . . . . .	DWord	 00000004 _DATA	
+score3 . . . . . . . . . . . . .	DWord	 00000008 _DATA	
+score4 . . . . . . . . . . . . .	DWord	 0000000C _DATA	
+string . . . . . . . . . . . . .	Byte	 000000D0 _DATA	
+weightedSum  . . . . . . . . . .	Byte	 00000115 _DATA	
+wtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+
+	   0 Warnings
+	   0 Errors
