@@ -1,0 +1,166 @@
+Microsoft (R) Macro Assembler Version 14.37.32824.0	    11/07/23 11:41:03
+P6_3_Hassler.asm					     Page 1 - 1
+
+
+				; Author:                 Harrison Hassler
+				; Assignment Title:       P6_3 Min-max array
+				; Assignment Description: Write an entire assembly
+				;                         language program that will
+				;                         prompt the user to enter
+				;                         twenty 32-bit values.
+				;                         Store them in an array and
+				;                         print the minimum and maximum
+				;                         values entered.
+				; Due Date:               11/7/2023
+				; Date Created:           11/1/2023
+				; Date Last Modified:     11/7/2023
+
+				.586
+				.MODEL FLAT
+
+				INCLUDE io.h                              ; header file for input/output
+			      C ; IO.H -- header file for I/O macros (listing suppressed)
+			      C .NOLIST      ; turn off listing
+			      C .LIST        ; begin listing
+			      C 
+
+				.STACK 4096
+
+ 00000000			.DATA
+ 00000000  00000014 [		array     DWORD   20 DUP(?)
+	    00000000
+	   ]
+ 00000050 45 6E 74 65 72	prompt1   BYTE    "Enter a number", 0
+	   20 61 20 6E 75
+	   6D 62 65 72 00
+ 0000005F  0000001E [		string    BYTE    30 DUP (?)
+	    00
+	   ]
+ 0000007D  00000014 [		labelBuff BYTE    20 DUP (?)
+	    00
+	   ]
+ 00000091 4D 69 6E 20 56	minOutput BYTE    "Min Value: "
+	   61 6C 75 65 3A
+	   20
+ 0000009C  0000000B [		minValue  BYTE    11 DUP (?), 0dh, 0ah
+	    00
+	   ] 0D 0A
+ 000000A9 4D 61 78 20 56	maxOutput BYTE    "Max Value: "
+	   61 6C 75 65 3A
+	   20
+ 000000B4  0000000B [		maxValue  BYTE    11 DUP(?), 0
+	    00
+	   ] 00
+
+
+ 00000000			.CODE
+ 00000000			_MainProc PROC
+ 00000000  8D 1D 00000000 R	             lea    ebx, array            ; load array address
+ 00000006  B9 00000014		             mov    ecx, 20               ; loop 20 times
+				                  
+ 0000000B			inputLoop:   
+				             input  prompt1, string, 30   ; read ASCII characters
+				             atod   string                ; convert to integer
+ 00000038  89 03		             mov    [ebx], eax            ; move to ebx array
+ 0000003A  83 C3 04		             add    ebx, 4                ; move to next memory location
+ 0000003D  E2 CC		             loop   inputLoop             ; loop to inputLoop
+
+ 0000003F  8D 1D 00000000 R	             lea    ebx, array            ; load array address
+ 00000045  8B 03		             mov    eax, [ebx]            ; set min value
+ 00000047  8B 13		             mov    edx, [ebx]            ; set max value
+ 00000049  83 C3 04		             add    ebx, 4                ; move to next memory location
+
+ 0000004C  B9 00000013		             mov    ecx, 19               ; loop 19 times
+
+ 00000051			minMaxLoop: 
+ 00000051  39 03		             cmp    [ebx], eax            ; compare number with current min
+ 00000053  7D 02		             jnl    skipMin               ; jump if not less
+ 00000055  8B 03		             mov    eax, [ebx]            ; if less set new current min
+
+ 00000057			skipMin:
+ 00000057  39 13		             cmp    [ebx], edx            ; compare number with current max
+ 00000059  7E 02		             jng    skipMax               ; jump if not greater
+ 0000005B  8B 13		             mov    edx, [ebx]            ; if greater set new current max
+
+ 0000005D			skipMax:     
+ 0000005D  83 C3 04		             add    ebx, 4                ; move to next memory location
+ 00000060  E2 EF		             loop   minMaxLoop            ; loop to minMaxLoop
+				    
+				             dtoa   minValue, eax         ; convert to ASCII characters
+				             dtoa   maxValue, edx         ; convert to ASCII characters
+				             output labelBuff, minOutput  ; output label and min and max
+
+ 000000AB  2B C0		             sub    eax, eax              ; clear eax
+ 000000AD  C3			             ret                          ; exit with return code 0
+ 000000AE			_MainProc ENDP
+				END                                       ; end of source code
+
+Microsoft (R) Macro Assembler Version 14.37.32824.0	    11/07/23 11:41:03
+P6_3_Hassler.asm					     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+atod . . . . . . . . . . . . . .	Proc
+atow . . . . . . . . . . . . . .	Proc
+dtoa . . . . . . . . . . . . . .	Proc
+input  . . . . . . . . . . . . .	Proc
+output . . . . . . . . . . . . .	Proc
+wtoa . . . . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 000000C0 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000000AE Para	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+_MainProc  . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000000AE Public
+  inputLoop  . . . . . . . . . .	L Near	 0000000B _TEXT	
+  minMaxLoop . . . . . . . . . .	L Near	 00000051 _TEXT	
+  skipMin  . . . . . . . . . . .	L Near	 00000057 _TEXT	
+  skipMax  . . . . . . . . . . .	L Near	 0000005D _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000000h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+_getInput  . . . . . . . . . . .	L Near	 00000000 FLAT	External
+_showOutput  . . . . . . . . . .	L Near	 00000000 FLAT	External
+array  . . . . . . . . . . . . .	DWord	 00000000 _DATA	
+atodproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+atowproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+dtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+labelBuff  . . . . . . . . . . .	Byte	 0000007D _DATA	
+maxOutput  . . . . . . . . . . .	Byte	 000000A9 _DATA	
+maxValue . . . . . . . . . . . .	Byte	 000000B4 _DATA	
+minOutput  . . . . . . . . . . .	Byte	 00000091 _DATA	
+minValue . . . . . . . . . . . .	Byte	 0000009C _DATA	
+prompt1  . . . . . . . . . . . .	Byte	 00000050 _DATA	
+string . . . . . . . . . . . . .	Byte	 0000005F _DATA	
+wtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+
+	   0 Warnings
+	   0 Errors
