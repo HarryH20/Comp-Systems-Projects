@@ -1,0 +1,150 @@
+Microsoft (R) Macro Assembler Version 14.37.32824.0	    09/29/23 17:32:43
+Midterm1.asm						     Page 1 - 1
+
+
+				; Author:                  Harrison Hassler
+				; Assignment Title:        Midterm1-Practicum
+				; Assignment Description:  This assembly langauge
+				;                          program calculates the perimeter
+				;                          of a football field based on the
+				;                          3 user inputs.
+				; Due Date:                9/30/2023
+				; Date Created:            9/29/2023
+				; Date Last Modified:      9/29/2023
+
+				.586
+				.MODEL FLAT
+
+				INCLUDE io.h                             ; header file for input/output
+			      C ; IO.H -- header file for I/O macros (listing suppressed)
+			      C .NOLIST      ; turn off listing
+			      C .LIST        ; begin listing
+			      C 
+
+				.STACK 4096
+
+ 00000000			.DATA
+ 00000000 00000000		number1 DWORD   ?
+ 00000004 00000000		number2 DWORD   ?
+ 00000008 00000000		number3 DWORD   ?
+ 0000000C 45 6E 74 65 72	prompt1 BYTE    "Enter the length of the field", 0
+	   20 74 68 65 20
+	   6C 65 6E 67 74
+	   68 20 6F 66 20
+	   74 68 65 20 66
+	   69 65 6C 64 00
+ 0000002A 45 6E 74 65 72	prompt2 BYTE    "Enter the length of the endzones", 0
+	   20 74 68 65 20
+	   6C 65 6E 67 74
+	   68 20 6F 66 20
+	   74 68 65 20 65
+	   6E 64 7A 6F 6E
+	   65 73 00
+ 0000004B 45 6E 74 65 72	prompt3 BYTE    "Enter the width of the field", 0
+	   20 74 68 65 20
+	   77 69 64 74 68
+	   20 6F 66 20 74
+	   68 65 20 66 69
+	   65 6C 64 00
+ 00000068  00000028 [		string  BYTE    40 DUP (?)
+	    00
+	   ]
+ 00000090 54 68 65 20 70	resultLbl BYTE  "The perimeter is", 0
+	   65 72 69 6D 65
+	   74 65 72 20 69
+	   73 00
+ 000000A1 00			perimeter     BYTE    11 DUP (?), 0
+
+				                                         ; using 32-bit
+ 00000000			.CODE
+ 00000000			_MainProc PROC
+				        input   prompt1, string, 40      ; prompt user for 1st input
+				        atod    string                   ; convert to integer
+ 0000002D  03 C0		        add     eax, eax                 ; double field length
+ 0000002F  8B D8		        mov     ebx, eax;                ; move length to ebx
+
+				        input   prompt2, string, 40      ; prompt user for 2nd input
+				        atod    string                   ; convert to integer
+ 0000005E  03 C0		        add     eax, eax                 ; double endzone length
+ 00000060  03 C0		        add     eax, eax                 ; double again  
+ 00000062  03 D8		        add     ebx, eax                 ; add length to ebx
+				        
+				        input   prompt3, string, 40      ; prompt user for 3rd input
+				        atod    string                   ; convert to integer
+ 00000091  03 C0		        add     eax, eax                 ; double width
+ 00000093  03 D8		        add     ebx, eax                 ; add with to ebx
+
+				        dtoa    perimeter, ebx           ; convert to ASCII characters
+				        output  resultLbl, perimeter     ; output label and perimeter
+
+ 000000C6  2B C0		        sub     eax, eax                 ; exit with return code 0
+ 000000C8  C3			        ret
+ 000000C9			_MainProc ENDP
+				END                                      ; end of source code
+
+Microsoft (R) Macro Assembler Version 14.37.32824.0	    09/29/23 17:32:43
+Midterm1.asm						     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+atod . . . . . . . . . . . . . .	Proc
+atow . . . . . . . . . . . . . .	Proc
+dtoa . . . . . . . . . . . . . .	Proc
+input  . . . . . . . . . . . . .	Proc
+output . . . . . . . . . . . . .	Proc
+wtoa . . . . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 000000AD Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000000C9 Para	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+_MainProc  . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000000C9 Public
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000000h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+_getInput  . . . . . . . . . . .	L Near	 00000000 FLAT	External
+_showOutput  . . . . . . . . . .	L Near	 00000000 FLAT	External
+atodproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+atowproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+dtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+number1  . . . . . . . . . . . .	DWord	 00000000 _DATA	
+number2  . . . . . . . . . . . .	DWord	 00000004 _DATA	
+number3  . . . . . . . . . . . .	DWord	 00000008 _DATA	
+perimeter  . . . . . . . . . . .	Byte	 000000A1 _DATA	
+prompt1  . . . . . . . . . . . .	Byte	 0000000C _DATA	
+prompt2  . . . . . . . . . . . .	Byte	 0000002A _DATA	
+prompt3  . . . . . . . . . . . .	Byte	 0000004B _DATA	
+resultLbl  . . . . . . . . . . .	Byte	 00000090 _DATA	
+string . . . . . . . . . . . . .	Byte	 00000068 _DATA	
+wtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+
+	   0 Warnings
+	   0 Errors
