@@ -1,0 +1,151 @@
+Microsoft (R) Macro Assembler Version 14.37.32824.0	    10/10/23 15:54:23
+P4_0_Hassler.asm					     Page 1 - 1
+
+
+				; Author:                  Harrison Hassler
+				; Assignment Title:        P4_0 Evaluate an Expression
+				; Assignment Description:  Develop a solution that will
+				;                          evaluate the following expression
+				;                          as efficiently as possible.
+				;
+				;                          5x + 5y - 2z
+				;
+				; Due Date:                10/12/2023
+				; Date Created:            10/10/2023
+				; Date Last Modified:      10/10/2023
+
+				.586
+				.MODEL FLAT
+
+				INCLUDE io.h                             ; header file for input/output
+			      C ; IO.H -- header file for I/O macros (listing suppressed)
+			      C .NOLIST      ; turn off listing
+			      C .LIST        ; begin listing
+			      C 
+
+				.STACK 4096                              ; reserve 4096-byte stack 
+
+ 00000000			.DATA                                    ; reserve storage for data
+
+ 00000000 45 6E 74 65 72	prompt1 BYTE    "Enter the number of apples", 0
+	   20 74 68 65 20
+	   6E 75 6D 62 65
+	   72 20 6F 66 20
+	   61 70 70 6C 65
+	   73 00
+ 0000001B 45 6E 74 65 72	prompt2 BYTE    "Enter the number of oranges", 0
+	   20 74 68 65 20
+	   6E 75 6D 62 65
+	   72 20 6F 66 20
+	   6F 72 61 6E 67
+	   65 73 00
+ 00000037 45 6E 74 65 72	prompt3 BYTE    "Enter the number of bananas", 0
+	   20 74 68 65 20
+	   6E 75 6D 62 65
+	   72 20 6F 66 20
+	   62 61 6E 61 6E
+	   61 73 00
+ 00000053  00000028 [		string  BYTE    40 DUP (?)
+	    00
+	   ]
+ 0000007B 54 68 65 20 73	result  BYTE    "The solution is", 0
+	   6F 6C 75 74 69
+	   6F 6E 20 69 73
+	   00
+ 0000008B  0000000B [		sum     BYTE    11 DUP (?), 0
+	    00
+	   ] 00
+
+ 00000000			.CODE                                    ; beginning of code
+ 00000000			_MainProc PROC
+				        input   prompt1, string, 40      ; prompt/read number of apples
+				        atod    string                   ; convert to integer
+ 0000002D  8B D8		        mov     ebx, eax                 ; copy to ebx
+
+				        input   prompt2, string, 40      ; prompt/read number of oranges
+				        atod    string                   ; convert to integer
+ 0000005C  03 D8		        add     ebx, eax                 ; add oranges and apples together
+ 0000005E  8B C3		        mov     eax, ebx                 ; copy to eax
+
+ 00000060  03 DB		        add     ebx, ebx                 ; double oranges and apples
+ 00000062  03 DB		        add     ebx, ebx                 ; double again
+ 00000064  03 D8		        add     ebx, eax                 ; add once more
+
+				        input   prompt3, string, 40      ; prompt/read number of bananas
+				        atod    string                   ; convert to integer
+ 00000093  03 C0		        add     eax, eax                 ; double bananas
+
+ 00000095  2B D8		        sub     ebx, eax                 ; subtract total bananas
+				        
+				       
+				        dtoa    sum, ebx                 ; convert to ASCII characters
+				        output  result, sum              ; output label and sum
+
+ 000000C8  2B C0		        sub     eax, eax                 ; exit with return code 0
+ 000000CA  C3			        ret
+ 000000CB			_MainProc ENDP
+				END                                      ; end of source code
+
+Microsoft (R) Macro Assembler Version 14.37.32824.0	    10/10/23 15:54:23
+P4_0_Hassler.asm					     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+atod . . . . . . . . . . . . . .	Proc
+atow . . . . . . . . . . . . . .	Proc
+dtoa . . . . . . . . . . . . . .	Proc
+input  . . . . . . . . . . . . .	Proc
+output . . . . . . . . . . . . .	Proc
+wtoa . . . . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000097 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000000CB Para	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+_MainProc  . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000000CB Public
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000000h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+_getInput  . . . . . . . . . . .	L Near	 00000000 FLAT	External
+_showOutput  . . . . . . . . . .	L Near	 00000000 FLAT	External
+atodproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+atowproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+dtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+prompt1  . . . . . . . . . . . .	Byte	 00000000 _DATA	
+prompt2  . . . . . . . . . . . .	Byte	 0000001B _DATA	
+prompt3  . . . . . . . . . . . .	Byte	 00000037 _DATA	
+result . . . . . . . . . . . . .	Byte	 0000007B _DATA	
+string . . . . . . . . . . . . .	Byte	 00000053 _DATA	
+sum  . . . . . . . . . . . . . .	Byte	 0000008B _DATA	
+wtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+
+	   0 Warnings
+	   0 Errors
