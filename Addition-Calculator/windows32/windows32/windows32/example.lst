@@ -1,0 +1,150 @@
+Microsoft (R) Macro Assembler Version 14.37.32824.0	    11/03/23 20:53:33
+example.asm						     Page 1 - 1
+
+
+				; Author:                 Harrison Hassler
+				; Assignment Title:       P6_2 Sum Input Values
+				; Assignment Description: Write an entire assembly language
+				;                         program that will prompt the user to
+				;                         enter a series of 16-bit values, summing
+				;                         the input values.  Continue prompting the
+				;                         user for values until the sum of the input
+				;                         values exceeds 5,000 or until ten zeroes
+				;                         have been input and processed. Display
+				;                         the sum of all values entered and the
+				;                         number of zeros entered.
+				; Due Date:               11/7/2023
+				; Date Created:           11/1/2023
+				; Date Last Modified:     11/3/2023
+
+				.586
+				.MODEL FLAT
+
+				INCLUDE io.h            
+			      C ; IO.H -- header file for I/O macros (listing suppressed)
+			      C .NOLIST      ; turn off listing
+			      C .LIST        ; begin listing
+			      C 
+
+				.STACK 4096
+
+ 00000000			.DATA
+ 00000000 45 6E 74 65 72	prompt1     BYTE    "Enter a number", 0
+	   20 61 20 6E 75
+	   6D 62 65 72 00
+ 0000000F  00000014 [		string      BYTE    20 DUP (?)
+	    00
+	   ]
+ 00000023  00000014 [		labelBuffer BYTE    20 DUP (?)
+	    00
+	   ]
+ 00000037 54 68 65 20 73	resultLbl   BYTE    "The sum of 10 numbers is "
+	   75 6D 20 6F 66
+	   20 31 30 20 6E
+	   75 6D 62 65 72
+	   73 20 69 73 20
+ 00000050  00000006 [		sum         BYTE    6 DUP (?), 0dh, 0ah
+	    00
+	   ] 0D 0A
+ 00000058 4E 75 6D 62 65	result2Lbl  BYTE    "Number of zeros is "
+	   72 20 6F 66 20
+	   7A 65 72 6F 73
+	   20 69 73 20
+ 0000006B  00000006 [		zeroes      BYTE    6 DUP (?), 0
+	    00
+	   ] 00
+
+ 00000000			.CODE
+ 00000000			_MainProc PROC 
+ 00000000  66| 2B DB		                    sub    bx, bx                  ; clear bx
+
+ 00000003			whileSum:                 
+ 00000003  66| 83 F9 0A		                    cmp    cx, 10                  ; compare zero count to 10
+ 00000007  74 41		                    je     endWhile                ; jump to endWhile if equal
+ 00000009  66| 81 FB 1388	                    cmp    bx, 5000                ; compare bx to 5000
+ 0000000E  7F 3A		                    jg     endWhile                ; jump if bx > 5000
+				                    input  prompt1, string, 20     ; read ASCII characters     
+				                    atow   string                  ; convert to integer                 
+ 0000003D  66| 83 F8 00		                    cmp    ax, 0                   ; compare ax to 0
+ 00000041  75 02		                    jne    addNum                  ; jump to addNum if not equal
+ 00000043  66| 41		                    inc    cx                      ; increment zero count
+
+ 00000045			addNum:                   
+ 00000045  66| 03 D8		                    add    bx, ax                  ; add to sum
+ 00000048  EB B9		                    jmp    whileSum                ; jump to whileSum
+				                          
+ 0000004A			endWhile:                 
+				                    wtoa   sum, bx                 ; convert to ASCII characters
+				                    wtoa   zeroes, cx              ; convert to ASCII characters
+				                    output labelBuffer, resultLbl  ; output label and answers
+ 00000095  66| 2B C0		                    sub    ax, ax                  ; clear ax
+ 00000098  C3			 ret                                               ; exit with return code 0
+ 00000099			_MainProc ENDP
+				END                                                ; end of source code
+Microsoft (R) Macro Assembler Version 14.37.32824.0	    11/03/23 20:53:33
+example.asm						     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+atod . . . . . . . . . . . . . .	Proc
+atow . . . . . . . . . . . . . .	Proc
+dtoa . . . . . . . . . . . . . .	Proc
+input  . . . . . . . . . . . . .	Proc
+output . . . . . . . . . . . . .	Proc
+wtoa . . . . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000072 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000099 Para	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+_MainProc  . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000099 Public
+  whileSum . . . . . . . . . . .	L Near	 00000003 _TEXT	
+  addNum . . . . . . . . . . . .	L Near	 00000045 _TEXT	
+  endWhile . . . . . . . . . . .	L Near	 0000004A _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000000h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+_getInput  . . . . . . . . . . .	L Near	 00000000 FLAT	External
+_showOutput  . . . . . . . . . .	L Near	 00000000 FLAT	External
+atodproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+atowproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+dtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+labelBuffer  . . . . . . . . . .	Byte	 00000023 _DATA	
+prompt1  . . . . . . . . . . . .	Byte	 00000000 _DATA	
+result2Lbl . . . . . . . . . . .	Byte	 00000058 _DATA	
+resultLbl  . . . . . . . . . . .	Byte	 00000037 _DATA	
+string . . . . . . . . . . . . .	Byte	 0000000F _DATA	
+sum  . . . . . . . . . . . . . .	Byte	 00000050 _DATA	
+wtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+zeroes . . . . . . . . . . . . .	Byte	 0000006B _DATA	
+
+	   0 Warnings
+	   0 Errors
